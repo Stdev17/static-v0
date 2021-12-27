@@ -1,17 +1,17 @@
 # Site settings
-title:          Tale
-description:    "Minimal Jekyll theme for storytellers"
-baseurl:        "/tale"
-url:            "https://chesterhow.github.io"
+title:          Cloud Native Life
+description:    "organized journals of my cognitive universe."
+baseurl:        ""
+url:            "https://berylleta.dev"
 
 # Google Analytics
 google_analytics: UA—XXXXXXXX-X
 
 # Author
 author:
-  name:         Chester How
-  url:          https://chester.how
-  email:        chesterhow@gmail.com
+  name:         Beryl Leta
+  url:          https://berylleta.dev
+  email:        contact@berylleta.dev
 
 # Build settings
 markdown:       kramdown
@@ -30,9 +30,11 @@ plugins:
   - jekyll-seo-tag
   # - jemoji #Uncomment this to allow emoji in your post
 
-# Permalinks
-permalink:      /:year-:month-:day/:title
-paginate:       5
+theme:      tale
+
+# permalinks
+permalink:  /:year-:month-:day/:title
+paginate:   5
 
 # Excludes
 exclude: [ Gemfile, Gemfile.lock, tale.gemspec ]
