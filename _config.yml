@@ -1,7 +1,8 @@
 # Site settings
 title:          Cloud Native Life
 description:    "organized journals of my cognitive universe."
-baseurl:        "https://berylleta.dev"
+domain:         "berylleta.dev"
+baseurl:        ""
 url:            "https://berylleta.dev"
 
 # Google Analytics
