@@ -1,7 +1,7 @@
 # Site settings
 title:          Cloud Native Life
 description:    "organized journals of my cognitive universe."
-baseurl:        ""
+baseurl:        "https://berylleta.dev"
 url:            "https://berylleta.dev"
 
 # Google Analytics
@@ -40,4 +40,4 @@ paginate:   5
 exclude: [ Gemfile, Gemfile.lock, tale.gemspec ]
 
 # Disqus (Set to your disqus id)
-disqus:         jekyll-tale
+disqus: berylleta

@@ -4,12 +4,6 @@ layout: default
 
 <div class="post">
   <div class="post-info">
-    <span>Cloud Native Life</span>
-    {% if page.author %}
-        {{ page.author }}
-    {% else %}
-        {{ site.author.name }}
-    {% endif %}
 
     {% if page.date %}
       <br>
@@ -18,7 +12,13 @@ layout: default
   </div>
 
   <h1 class="post-title">{{ page.title }}</h1>
-  <div class="post-line"></div>
+  <div class="tags-clouds">
+    {% for tag in page.tags %}
+    <a href="/tags/#{{ tag | prepend: site.baseurl }}">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  <br>
+  <!--<div class="post-line"></div>-->
 
   {{ content }}
 </div>
