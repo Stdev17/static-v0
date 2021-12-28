@@ -7,7 +7,6 @@ echo 'Building the site...'
 bundle exec jekyll build
 
 echo 'Pushing it back to gh-pages repository...'
-cd build
 remote_repo="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" && \
 remote_branch="gh-pages" && \
 git init && \
