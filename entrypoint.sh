@@ -12,7 +12,7 @@ echo ${GITHUB_ACTOR} ${GITHUB_REPOSITORY}
 
 echo 'Pushing it back to gh-pages repository...'
 remote_repo="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" && \
-cd _site && \
+
 git init && \
 git config --global init.defaultBranch main && \
 git config user.name "${GITHUB_ACTOR}" && \
@@ -26,7 +26,7 @@ echo "pushing"
 git push --force -u origin gh-pages
 
 rm -rf .git
-cd ..
+
 rm -rf _site
 
 echo 'Deploy job done'
