@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 echo 'Installing the gem bundle...'
 bundle install

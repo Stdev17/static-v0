@@ -9,6 +9,8 @@ ENV LANGUAGE en_US.UTF-8
 # adding metadata on the image
 LABEL "repository"="http://github.com/Stdev17/static-v0"
 
-ADD entrypoint.sh ./entrypoint.sh
+ADD entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["./entrypoint.sh"]
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
