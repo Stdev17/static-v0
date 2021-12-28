@@ -1,0 +1,14 @@
+name: static-deploy
+on: [push]
+jobs: 
+  build: 
+    name: deploy
+    runs-on: ubuntu-18.04
+    steps: 
+      - uses: actions/checkout@v2
+      - name: build-n-deploy
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
+          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+        uses: ./action.yml
