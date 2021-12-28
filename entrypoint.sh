@@ -17,11 +17,11 @@ git init && \
 git config --global init.defaultBranch main && \
 git config user.name "${GITHUB_ACTOR}" && \
 git config user.email "${GITHUB_ACTOR}@users.noreply.github.com" && \
-git remote add origin $remote_repo && \
-echo "commiting" &&\
-git add . && \
-git commit -m 'action build - $(date)' > /dev/null 2>&1 && \
-echo "pushing" &&\
+git remote add origin $remote_repo
+echo "commiting"
+git add .
+git commit -m 'action build - $(date)'
+echo "pushing"
 git push --force -u origin main:gh-pages
 
 rm -rf .git
