@@ -21,6 +21,7 @@ git add . && \
 git commit -m 'action build - $(date)' > /dev/null 2>&1 && \
 echo "pushing" &&\
 git push --force $remote_repo main:gh-pages > /dev/null 2>&1 && \
+echo "done" &&\
 rm -rf .git && \
 cd ..\
 rm -rf _site
