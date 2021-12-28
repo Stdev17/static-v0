@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.1">Jekyll</generator><link href="https://berylleta.dev/feed.xml" rel="self" type="application/atom+xml" /><link href="https://berylleta.dev/" rel="alternate" type="text/html" /><updated>2021-12-28T19:41:57+00:00</updated><id>https://berylleta.dev/feed.xml</id><title type="html">Cloud Native Life</title><subtitle>organized journals of my cognitive universe.</subtitle><author><name>Beryl Leta</name><email>contact@berylleta.dev</email></author><entry><title type="html">BoJ Cheat Sheet (v211228.0)</title><link href="https://berylleta.dev/2021-12-28/boj-cheat-sheet" rel="alternate" type="text/html" title="BoJ Cheat Sheet (v211228.0)" /><published>2021-12-28T00:00:00+00:00</published><updated>2021-12-28T00:00:00+00:00</updated><id>https://berylleta.dev/2021-12-28/boj-cheat-sheet</id><content type="html" xml:base="https://berylleta.dev/2021-12-28/boj-cheat-sheet">&lt;p&gt;거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C++17&lt;/code&gt; 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;주의사항&quot;&gt;주의사항&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;여기 있는 내용은 철저히 Competitive Programming/코딩 테스트용 문제풀이에 최적화된 접근이므로, 실제 코딩에는 안티패턴으로 작용하는 경우가 상당수입니다. 한편으로는 실제로도 나쁘지 않은 접근도 있습니다. 일독해 보시면서 어떤 이유에서 그러한지 같이 고민해 보아요.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;목차&quot;&gt;목차&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;입출력, 포매팅&lt;/li&gt;
+  &lt;li&gt;데이터 트리밍&lt;/li&gt;
+  &lt;li&gt;자료구조&lt;/li&gt;
+  &lt;li&gt;에러 찾기&lt;/li&gt;
+  &lt;li&gt;코드 가독성&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;입출력-포매팅&quot;&gt;입출력, 포매팅&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;cin/cout보다 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scanf/printf&lt;/code&gt;가 더 빠르다. endl은 엄청 느리기 때문에 대신 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;\n&lt;/code&gt;을 사용해야 한다.
+endl은 개행 뿐만 아니라 출력 버퍼를 지워버리므로 오버헤드가 아주 큰 것이다.
+굳이 cin을 사용하려면 성능을 위해 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);&lt;/code&gt;을 선언할 것.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;while (scanf(&quot;%d&quot;, &amp;amp;n) != EOF)&lt;/code&gt; - 테스트 케이스 n개를 받는다. 0 등으로 끝나면 EOF 대신 넣어도 되고.
+    &lt;ul&gt;
+      &lt;li&gt;n개의 입력을 받아 배열에 저장할 때는, for문을 돌린다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scanf(&quot;%d.%d&quot;, &amp;amp;val1, &amp;amp;val2)&lt;/code&gt; -  소수점은 어지간하면 정수형으로 받는 게 빠르다.
+    &lt;ul&gt;
+      &lt;li&gt;특히, double은 부동 소수점 자료형이므로 정확한 값을 표현하기엔 위험하다. 유리수는 정수형으로 표현하는 것을 추천한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scanf(&quot;%3c%*c%d&quot;)&lt;/code&gt; - 정해진 글자만큼 char 받기. *는 캐릭터 하나 무시하기. 이 포맷으로 ABC-1234를 한 번에 받을 수 있다. 이를 응용하면, 글자별로(맵으로) 주어지는 입력도 for loop로 받아낼 수 있다. (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for i, j scanf(&quot;%1d&quot;, &amp;amp;map[i][j])&lt;/code&gt; - 물론 전역 배열에 받는다)
+    &lt;ul&gt;
+      &lt;li&gt;문자 하나가 아닌, 2자리 이상의 숫자 등을 받을 때 실수로 %1d를 쓰지 않도록 한다. 공백이 아닌 문자로 나뉜다면, asterisk(*)를 활용해야 한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scanf(&quot; %c&quot;)&lt;/code&gt; - 이런 식으로 라인 피드를 제거할 수 있다. char는 \n이 남으므로 주의해야 한다. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;getchar()&lt;/code&gt;로 받아낼 수도 있다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fgets(buf, size, stdin)&lt;/code&gt;으로 문자열을 char 배열로 받을 수 있다. 아스키 코드와 관련해서, string을 char 배열이라고 해석하면 자료 조작이 유용해진다. 실제로 C++의 string이라는 자료형은 const char*를 추상화한 것이기도 하고.&lt;/li&gt;
+  &lt;li&gt;optional하게 데이터가 들쭉날쭉하면, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fgets(buf, MAX_SIZE, stdin)&lt;/code&gt;과 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sscanf(buf, &quot; %s %d&quot;, string, &amp;amp;int)&lt;/code&gt;로 받아낸다. 그러면 숫자가 빠져도 바로 받아낼 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;데이터-트리밍&quot;&gt;데이터 트리밍&lt;/h2&gt;
+
+&lt;h2 id=&quot;자료구조&quot;&gt;자료구조&lt;/h2&gt;
+
+&lt;h2 id=&quot;에러-찾기&quot;&gt;에러 찾기&lt;/h2&gt;
+
+&lt;h3 id=&quot;스택-오버플로우&quot;&gt;스택 오버플로우&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;배열은 결국 연속된 포인터들의 syntactic sugar임을 상기하자. 포인터의 크기는 4 byte, int의 크기는 4 byte므로, 스택에 대략 100,000개 정도의 int를 담는 배열까지 저장할 수 있을 것이다. struct의 크기는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sizeof(struct)&lt;/code&gt;로 알 수 있는데, struct의 멤버 중 가장 큰 자료형의 크기를 기준으로 padding이 발생한다.
+    &lt;ul&gt;
+      &lt;li&gt;일반적으로 C++ 컴파일러에 설정된 스택 사이즈는 1MB를 넘지 않는다. 반면 힙 사이즈는 문제 조건마다 다르게 제시되는데, 사실상 모든 문제는 백준에서 제공하는 메모리 내에서 충분히 해결 가능하다. 스택은 컴파일 타임에 자료의 메모리 상 위치가 결정되어 있어 CPU에 캐싱이 쉽지만 태생적인 크기가 작아 자료의 양이 많아지면 스택 오버플로우가 발생할 수 있다. 힙은 런타임에 할당될 때마다 자료의 위치가 달라져 캐시 미스 빈도가 올라 가고 segmentation fault의 위험성이 도사리고 있지만, 이 점을 활용하여 런타임에 크기가 결정되는 변수를 도라에몽 주머니처럼 자유롭게 할당 가능하다. 다시 말하지만, 바로 이 점 때문에 segfault 위험성이 있다!&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;코드-가독성&quot;&gt;코드 가독성&lt;/h2&gt;
+&lt;h3 id=&quot;상수-변수-구조체&quot;&gt;상수, 변수, 구조체&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;상수는 전역으로 보기 좋게 정리해 둔다. (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;const int MAX_COUNT = 10000;&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Beryl Leta</name><email>contact@berylleta.dev</email></author><category term="Competitive Programming" /><category term="C++" /><category term="Cheat Sheet" /><summary type="html">거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 C++17 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다.</summary></entry><entry><title type="html">Introducing Tale</title><link href="https://berylleta.dev/2017-03-29/introducing-tale" rel="alternate" type="text/html" title="Introducing Tale" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-29/introducing-tale</id><content type="html" xml:base="https://berylleta.dev/2017-03-29/introducing-tale">&lt;p&gt;Tale is a minimal &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; theme curated for storytellers. It is designed and developed by &lt;a href=&quot;https://github.com/chesterhow/&quot;&gt;myself&lt;/a&gt; for a friend who writes short stories.&lt;/p&gt;
+
+&lt;h2 id=&quot;tale-features&quot;&gt;Tale features&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Compatible with GitHub Pages&lt;/li&gt;
+  &lt;li&gt;Responsive design (looks just as good on mobile)&lt;/li&gt;
+  &lt;li&gt;Syntax highlighting, with the help of Pygments&lt;/li&gt;
+  &lt;li&gt;Markdown and HTML text formatting&lt;/li&gt;
+  &lt;li&gt;Pagination of posts&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Head over to the &lt;a href=&quot;/2017-03-16/example-content&quot;&gt;Example Content&lt;/a&gt; post for a showcase of Tale’s text formatting features.&lt;/p&gt;
+
+&lt;h2 id=&quot;browser-support&quot;&gt;Browser Support&lt;/h2&gt;
+&lt;p&gt;Tale works on most if not all modern browsers, including Chrome, Safari and Firefox 👍🏼&lt;/p&gt;
+
+&lt;h2 id=&quot;download-or-contribute&quot;&gt;Download or Contribute&lt;/h2&gt;
+&lt;p&gt;Tale is publicly hosted on GitHub, so go ahead and download or fork it at the &lt;a href=&quot;https://github.com/chesterhow/tale&quot;&gt;GitHub repository&lt;/a&gt;. If you spot any bugs or have any suggestions, feel free to create an issue or make a pull request.&lt;/p&gt;
+
+&lt;p&gt;Thanks for checking out Tale!&lt;/p&gt;</content><author><name>Chester</name></author><category term="Tale" /><category term="Test" /><summary type="html">Tale is a minimal Jekyll theme curated for storytellers. It is designed and developed by myself for a friend who writes short stories.</summary></entry><entry><title type="html">Example Content</title><link href="https://berylleta.dev/2017-03-16/example-content" rel="alternate" type="text/html" title="Example Content" /><published>2017-03-16T00:00:00+00:00</published><updated>2017-03-16T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-16/example-content</id><content type="html" xml:base="https://berylleta.dev/2017-03-16/example-content">&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tincidunt ornare nibh, non elementum augue tempus eget. Pellentesque tempus scelerisque iaculis. Nullam interdum ultricies nibh quis sollicitudin. Donec ornare fermentum facilisis. Ut at sem ac sem imperdiet varius a eget tortor. Nam eu augue eget orci semper maximus in eget augue. Mauris ornare, nisl ut suscipit consectetur, mi quam interdum tellus, at rutrum quam eros ultrices mi.&lt;/p&gt;
+
+&lt;h1 id=&quot;headers&quot;&gt;Headers&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;gh&quot;&gt;# H1&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;## H2&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;### H3&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;#### H4&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;##### H5&lt;/span&gt;
+&lt;span class=&quot;gu&quot;&gt;###### H6&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;h1&quot;&gt;H1&lt;/h1&gt;
+&lt;h2 id=&quot;h2&quot;&gt;H2&lt;/h2&gt;
+&lt;h3 id=&quot;h3&quot;&gt;H3&lt;/h3&gt;
+&lt;h4 id=&quot;h4&quot;&gt;H4&lt;/h4&gt;
+&lt;h5 id=&quot;h5&quot;&gt;H5&lt;/h5&gt;
+&lt;h6 id=&quot;h6&quot;&gt;H6&lt;/h6&gt;
+
+&lt;h1 id=&quot;text-formatting&quot;&gt;Text formatting&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;gs&quot;&gt;**Bold**&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; _Italics_
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; ~~Strikethrough~~
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;ins&amp;gt;&lt;/span&gt;Underline&lt;span class=&quot;nt&quot;&gt;&amp;lt;/ins&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;sup&amp;gt;&lt;/span&gt;Superscript&lt;span class=&quot;nt&quot;&gt;&amp;lt;/sup&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;lt;sub&amp;gt;&lt;/span&gt;Subscript&lt;span class=&quot;nt&quot;&gt;&amp;lt;/sub&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; Abbreviation: &lt;span class=&quot;nt&quot;&gt;&amp;lt;abbr&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;title=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;HyperText Markup Language&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;HTML&lt;span class=&quot;nt&quot;&gt;&amp;lt;/abbr&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; Citation: &lt;span class=&quot;nt&quot;&gt;&amp;lt;cite&amp;gt;&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;&amp;amp;mdash;&lt;/span&gt; Chester How&lt;span class=&quot;nt&quot;&gt;&amp;lt;/cite&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Italics&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;Strikethrough&lt;/del&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;ins&gt;Underline&lt;/ins&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;sup&gt;Superscript&lt;/sup&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;sub&gt;Subscript&lt;/sub&gt;&lt;/li&gt;
+  &lt;li&gt;Abbreviation: &lt;abbr title=&quot;HyperText Markup Language&quot;&gt;HTML&lt;/abbr&gt;&lt;/li&gt;
+  &lt;li&gt;Citation: &lt;cite&gt;— Chester How&lt;/cite&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;lists&quot;&gt;Lists&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;p&quot;&gt;1.&lt;/span&gt; Ordered list item 1
+&lt;span class=&quot;p&quot;&gt;2.&lt;/span&gt; Ordered list item 2
+&lt;span class=&quot;p&quot;&gt;3.&lt;/span&gt; Ordered list item 3
+&lt;span class=&quot;p&quot;&gt;
+*&lt;/span&gt; Unordered list item 1
+&lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; Unordered list item 2
+&lt;span class=&quot;p&quot;&gt;*&lt;/span&gt; Unordered list item 3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Ordered list item 1&lt;/li&gt;
+  &lt;li&gt;Ordered list item 2&lt;/li&gt;
+  &lt;li&gt;Ordered list item 3&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Unordered list item 1&lt;/li&gt;
+  &lt;li&gt;Unordered list item 2&lt;/li&gt;
+  &lt;li&gt;Unordered list item 3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;links&quot;&gt;Links&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;Check out tale on &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GitHub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;https://github.com/chesterhow/tale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out tale on &lt;a href=&quot;https://github.com/chesterhow/tale&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;images&quot;&gt;Images&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;p&quot;&gt;![&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;Placeholder image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;https://placehold.it/800x400&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;&quot;Placeholder image&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;![&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;Image with caption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;https://placehold.it/700x400&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;&quot;Image with caption&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;ge&quot;&gt;_This is an image with a caption_&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://placehold.it/800x400&quot; alt=&quot;Placeholder image&quot; title=&quot;Placeholder image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://placehold.it/700x400&quot; alt=&quot;Image with caption&quot; title=&quot;Image with caption&quot; /&gt;
+&lt;em&gt;This is an image with a caption&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;code-and-syntax-highlighting&quot;&gt;Code and Syntax Highlighting&lt;/h1&gt;
+&lt;p&gt;Use back-ticks for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;inline code&lt;/code&gt;. Multi-line code snippets are supported too through Pygments.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Sample javascript code&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;JavaScript syntax highlighting&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c1&quot;&gt;# Sample python code
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Python syntax highlighting&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Adding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;linenos&lt;/code&gt; to the highlight tag enables line numbers.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c1&quot;&gt;// Sample javascript code&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;JavaScript syntax highlighting&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;blockquotes&quot;&gt;Blockquotes&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span class=&quot;gt&quot;&gt;&amp;gt; Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;horizontal-rule--line-break&quot;&gt;Horizontal Rule &amp;amp; Line Break&lt;/h1&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;Use &lt;span class=&quot;sb&quot;&gt;`&amp;lt;hr&amp;gt;`&lt;/span&gt; for horizontal rules
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;hr&amp;gt;&lt;/span&gt;
+
+and &lt;span class=&quot;sb&quot;&gt;`&amp;lt;br&amp;gt;`&lt;/span&gt; for line breaks.
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;br&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;hr&amp;gt;&lt;/code&gt; for horizontal rules&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;br&amp;gt;&lt;/code&gt; for line breaks.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The end&lt;/em&gt;&lt;/p&gt;</content><author><name>Chester</name></author><category term="Example" /><summary type="html">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tincidunt ornare nibh, non elementum augue tempus eget. Pellentesque tempus scelerisque iaculis. Nullam interdum ultricies nibh quis sollicitudin. Donec ornare fermentum facilisis. Ut at sem ac sem imperdiet varius a eget tortor. Nam eu augue eget orci semper maximus in eget augue. Mauris ornare, nisl ut suscipit consectetur, mi quam interdum tellus, at rutrum quam eros ultrices mi.</summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="https://berylleta.dev/2017-03-10/welcome-to-jekyll" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2017-03-10T00:00:00+00:00</published><updated>2017-03-10T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-10/welcome-to-jekyll</id><content type="html" xml:base="https://berylleta.dev/2017-03-10/welcome-to-jekyll">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets: like these&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Tom&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &apos;Hi, Tom&apos; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Jekyll</name></author><category term="Jekyll" /><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry><entry><title type="html">The Case of the Missing Post</title><link href="https://berylleta.dev/2017-03-07/the-case-of-the-missing-post" rel="alternate" type="text/html" title="The Case of the Missing Post" /><published>2017-03-07T00:00:00+00:00</published><updated>2017-03-07T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-07/the-case-of-the-missing-post</id><content type="html" xml:base="https://berylleta.dev/2017-03-07/the-case-of-the-missing-post">&lt;p&gt;Kitty power! and sometimes switches in french and say “miaou” just because well why not man running from cops stops to pet cats, goes to jail, yet licks your face or drink water out of the faucet so jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water yet drink water out of the faucet. Pelt around the house and up and down stairs chasing phantoms.&lt;/p&gt;
+
+&lt;p&gt;Sit in window and stare ooo, a bird! yum. Sit and stare. Sweet beast loves cheeseburgers. Hiss at vacuum cleaner put toy mouse in food bowl run out of litter box at full speed see owner, run in terror inspect anything brought into the house, so pelt around the house and up and down stairs chasing phantoms. Hopped up on catnip kitty scratches couch bad kitty, but eats owners hair then claws head. Lie on your belly and purr when you are asleep kitty power! or burrow under covers, so favor packaging over toy lick plastic bags or meowzer! yet unwrap toilet paper.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.catipsum.com/&quot;&gt;Cat Ipsum&lt;/a&gt;&lt;/p&gt;</content><author><name>Chester</name></author><category term="Tale" /><summary type="html">Kitty power! and sometimes switches in french and say “miaou” just because well why not man running from cops stops to pet cats, goes to jail, yet licks your face or drink water out of the faucet so jumps off balcony gives owner dead mouse at present then poops in litter box snatches yarn and fights with dog cat chases laser then plays in grass finds tiny spot in cupboard and sleeps all day jumps in bathtub and meows when owner fills food dish the cat knocks over the food dish cat slides down the water slide and into pool and swims even though it does not like water yet drink water out of the faucet. Pelt around the house and up and down stairs chasing phantoms.</summary></entry><entry><title type="html">The Mystery of the Filler Post</title><link href="https://berylleta.dev/2017-03-06/the-mystery-of-the-filler-post" rel="alternate" type="text/html" title="The Mystery of the Filler Post" /><published>2017-03-06T00:00:00+00:00</published><updated>2017-03-06T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-06/the-mystery-of-the-filler-post</id><content type="html" xml:base="https://berylleta.dev/2017-03-06/the-mystery-of-the-filler-post">&lt;p&gt;Hornswaggle measured fer yer chains chase run a shot across the bow Chain Shot flogging Pirate Round galleon rope’s end aft. Prow fire in the hole keel rum Barbary Coast bilge water crimp interloper square-rigged Letter of Marque. Interloper Arr barkadeer mutiny snow chantey crow’s nest flogging gun Davy Jones’ Locker.&lt;/p&gt;
+
+&lt;p&gt;Bilge jolly boat barque topsail interloper chandler spanker scuttle Arr sloop. Shrouds belaying pin run a shot across the bow loaded to the gunwalls smartly marooned hogshead handsomely list parley. Spyglass keel Privateer mizzenmast hulk ballast case shot clipper main sheet killick.&lt;/p&gt;
+
+&lt;p&gt;Careen hempen halter Letter of Marque pillage swing the lead take a caulk Sail ho jury mast walk the plank ho. Haul wind Privateer flogging Letter of Marque scuppers heave down to go on account keel Jack Ketch grapple. Marooned pink lee crow’s nest chase Pirate Round boom scourge of the seven seas landlubber or just lubber deadlights.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pirateipsum.me/&quot;&gt;Pirate Ipsum&lt;/a&gt;&lt;/p&gt;</content><author><name>Chester</name></author><category term="Tale" /><summary type="html">Hornswaggle measured fer yer chains chase run a shot across the bow Chain Shot flogging Pirate Round galleon rope’s end aft. Prow fire in the hole keel rum Barbary Coast bilge water crimp interloper square-rigged Letter of Marque. Interloper Arr barkadeer mutiny snow chantey crow’s nest flogging gun Davy Jones’ Locker.</summary></entry><entry><title type="html">Pagination Post</title><link href="https://berylleta.dev/2017-03-05/pagination-post" rel="alternate" type="text/html" title="Pagination Post" /><published>2017-03-05T00:00:00+00:00</published><updated>2017-03-05T00:00:00+00:00</updated><id>https://berylleta.dev/2017-03-05/pagination-post</id><content type="html" xml:base="https://berylleta.dev/2017-03-05/pagination-post">&lt;p&gt;Here we see &lt;strong&gt;Tale’s&lt;/strong&gt; pagination feature in action. It is set to 5 posts per page by default. Feel free to change this number in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; file!&lt;/p&gt;</content><author><name>Chester</name></author><category term="Tale" /><summary type="html">Here we see Tale’s pagination feature in action. It is set to 5 posts per page by default. Feel free to change this number in the _config.yml file!</summary></entry></feed>

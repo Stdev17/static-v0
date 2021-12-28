@@ -1,0 +1,5 @@
+name: build-on-docker
+description: 'clone the repo and build jekyll, then push it to gh-pages'
+runs: 
+  using: 'docker'
+  image: 'Dockerfile'

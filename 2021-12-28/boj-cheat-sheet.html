@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>BoJ Cheat Sheet (v211228.0) | Cloud Native Life</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="BoJ Cheat Sheet (v211228.0)" />
+<meta name="author" content="Beryl Leta" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 C++17 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다." />
+<meta property="og:description" content="거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 C++17 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다." />
+<link rel="canonical" href="https://berylleta.dev/2021-12-28/boj-cheat-sheet" />
+<meta property="og:url" content="https://berylleta.dev/2021-12-28/boj-cheat-sheet" />
+<meta property="og:site_name" content="Cloud Native Life" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-12-28T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="BoJ Cheat Sheet (v211228.0)" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://berylleta.dev/2021-12-28/boj-cheat-sheet"},"url":"https://berylleta.dev/2021-12-28/boj-cheat-sheet","author":{"@type":"Person","name":"Beryl Leta"},"@type":"BlogPosting","headline":"BoJ Cheat Sheet (v211228.0)","dateModified":"2021-12-28T00:00:00+00:00","datePublished":"2021-12-28T00:00:00+00:00","description":"거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 C++17 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i,700">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+
+  <!-- RSS -->
+  <link type="application/atom+xml" rel="alternate" href="https://berylleta.dev/feed.xml" title="Cloud Native Life" />
+
+  <!-- Google Analytics-->
+  
+</head>
+
+
+  <body>
+
+    <nav class="nav">
+  <div class="nav-container">
+    <a href="/">
+      <h2 class="nav-title">Cloud Native Life</h2>
+    </a>
+    <ul>
+      <li><a href="/">Posts</a></li>
+      <li><a href="/tags">Tags</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+
+    <main>
+      <div class="post">
+  <div class="post-info">
+
+    
+      <br>
+      <span>on&nbsp;</span><time datetime="2021-12-28 00:00:00 +0000">December 28, 2021</time>
+    
+  </div>
+
+  <h1 class="post-title">BoJ Cheat Sheet (v211228.0)</h1>
+  <div class="tags-clouds">
+    
+    <a href="/tags/#Competitive Programming">Competitive Programming</a>
+    
+    <a href="/tags/#C++">C++</a>
+    
+    <a href="/tags/#Cheat Sheet">Cheat Sheet</a>
+    
+  </div>
+  <br>
+  <!--<div class="post-line"></div>-->
+
+  <p>거두절미하고, 이 포스트는 백준 문제풀이의 소소한 팁을 <code class="language-plaintext highlighter-rouge">C++17</code> 기준에서 정리했습니다. 혹시 다른 개발 언어를 사용하시더라도 상당수는 공통적으로 해당하리라 생각합니다. 저도 처음 문제풀이 과정을 익혀 나가면서 아주 trivial한 부분에서까지 시행착오를 많이 겪었었는데, 알게 된 정보를 이렇게 공유함으로써 여러분은 더욱 빠르게 정진할 수 있었으면 좋겠어요. 개발 생태계의 구성원끼리 이렇게 사다리를 쌓아 올려나가는 문화, 그리고 저도 이런 식으로나마 기여할 수 있다는 것이 하나의 구성원으로서 자랑스럽습니다.</p>
+
+<h2 id="주의사항">주의사항</h2>
+<ul>
+  <li>여기 있는 내용은 철저히 Competitive Programming/코딩 테스트용 문제풀이에 최적화된 접근이므로, 실제 코딩에는 안티패턴으로 작용하는 경우가 상당수입니다. 한편으로는 실제로도 나쁘지 않은 접근도 있습니다. 일독해 보시면서 어떤 이유에서 그러한지 같이 고민해 보아요.</li>
+</ul>
+
+<h3 id="목차">목차</h3>
+<ul>
+  <li>입출력, 포매팅</li>
+  <li>데이터 트리밍</li>
+  <li>자료구조</li>
+  <li>에러 찾기</li>
+  <li>코드 가독성</li>
+</ul>
+
+<h2 id="입출력-포매팅">입출력, 포매팅</h2>
+
+<ul>
+  <li>cin/cout보다 <code class="language-plaintext highlighter-rouge">scanf/printf</code>가 더 빠르다. endl은 엄청 느리기 때문에 대신 <code class="language-plaintext highlighter-rouge">\n</code>을 사용해야 한다.
+endl은 개행 뿐만 아니라 출력 버퍼를 지워버리므로 오버헤드가 아주 큰 것이다.
+굳이 cin을 사용하려면 성능을 위해 <code class="language-plaintext highlighter-rouge">ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);</code>을 선언할 것.</li>
+  <li><code class="language-plaintext highlighter-rouge">while (scanf("%d", &amp;n) != EOF)</code> - 테스트 케이스 n개를 받는다. 0 등으로 끝나면 EOF 대신 넣어도 되고.
+    <ul>
+      <li>n개의 입력을 받아 배열에 저장할 때는, for문을 돌린다.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">scanf("%d.%d", &amp;val1, &amp;val2)</code> -  소수점은 어지간하면 정수형으로 받는 게 빠르다.
+    <ul>
+      <li>특히, double은 부동 소수점 자료형이므로 정확한 값을 표현하기엔 위험하다. 유리수는 정수형으로 표현하는 것을 추천한다.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">scanf("%3c%*c%d")</code> - 정해진 글자만큼 char 받기. *는 캐릭터 하나 무시하기. 이 포맷으로 ABC-1234를 한 번에 받을 수 있다. 이를 응용하면, 글자별로(맵으로) 주어지는 입력도 for loop로 받아낼 수 있다. (<code class="language-plaintext highlighter-rouge">for i, j scanf("%1d", &amp;map[i][j])</code> - 물론 전역 배열에 받는다)
+    <ul>
+      <li>문자 하나가 아닌, 2자리 이상의 숫자 등을 받을 때 실수로 %1d를 쓰지 않도록 한다. 공백이 아닌 문자로 나뉜다면, asterisk(*)를 활용해야 한다.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">scanf(" %c")</code> - 이런 식으로 라인 피드를 제거할 수 있다. char는 \n이 남으므로 주의해야 한다. <code class="language-plaintext highlighter-rouge">getchar()</code>로 받아낼 수도 있다.</li>
+  <li><code class="language-plaintext highlighter-rouge">fgets(buf, size, stdin)</code>으로 문자열을 char 배열로 받을 수 있다. 아스키 코드와 관련해서, string을 char 배열이라고 해석하면 자료 조작이 유용해진다. 실제로 C++의 string이라는 자료형은 const char*를 추상화한 것이기도 하고.</li>
+  <li>optional하게 데이터가 들쭉날쭉하면, <code class="language-plaintext highlighter-rouge">fgets(buf, MAX_SIZE, stdin)</code>과 <code class="language-plaintext highlighter-rouge">sscanf(buf, " %s %d", string, &amp;int)</code>로 받아낸다. 그러면 숫자가 빠져도 바로 받아낼 수 있다.</li>
+</ul>
+
+<h2 id="데이터-트리밍">데이터 트리밍</h2>
+
+<h2 id="자료구조">자료구조</h2>
+
+<h2 id="에러-찾기">에러 찾기</h2>
+
+<h3 id="스택-오버플로우">스택 오버플로우</h3>
+
+<ul>
+  <li>배열은 결국 연속된 포인터들의 syntactic sugar임을 상기하자. 포인터의 크기는 4 byte, int의 크기는 4 byte므로, 스택에 대략 100,000개 정도의 int를 담는 배열까지 저장할 수 있을 것이다. struct의 크기는 <code class="language-plaintext highlighter-rouge">sizeof(struct)</code>로 알 수 있는데, struct의 멤버 중 가장 큰 자료형의 크기를 기준으로 padding이 발생한다.
+    <ul>
+      <li>일반적으로 C++ 컴파일러에 설정된 스택 사이즈는 1MB를 넘지 않는다. 반면 힙 사이즈는 문제 조건마다 다르게 제시되는데, 사실상 모든 문제는 백준에서 제공하는 메모리 내에서 충분히 해결 가능하다. 스택은 컴파일 타임에 자료의 메모리 상 위치가 결정되어 있어 CPU에 캐싱이 쉽지만 태생적인 크기가 작아 자료의 양이 많아지면 스택 오버플로우가 발생할 수 있다. 힙은 런타임에 할당될 때마다 자료의 위치가 달라져 캐시 미스 빈도가 올라 가고 segmentation fault의 위험성이 도사리고 있지만, 이 점을 활용하여 런타임에 크기가 결정되는 변수를 도라에몽 주머니처럼 자유롭게 할당 가능하다. 다시 말하지만, 바로 이 점 때문에 segfault 위험성이 있다!</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="코드-가독성">코드 가독성</h2>
+<h3 id="상수-변수-구조체">상수, 변수, 구조체</h3>
+<ul>
+  <li>상수는 전역으로 보기 좋게 정리해 둔다. (<code class="language-plaintext highlighter-rouge">const int MAX_COUNT = 10000;</code>)</li>
+</ul>
+
+</div>
+
+
+
+<div class="pagination">
+  
+  
+    <a href="/2017-03-29/introducing-tale" class="right arrow">&#8594;</a>
+  
+
+  <a href="#" class="top">Top</a>
+</div>
+    </main>
+
+    <footer>
+  <span>
+    &copy; <time datetime="2021-12-28 19:41:57 +0000">2021</time> Beryl Leta. Made in ☁️
+  </span>
+</footer>
+
+  </body>
+</html>
