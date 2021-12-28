@@ -22,8 +22,7 @@ echo "commiting" &&\
 git add . && \
 git commit -m 'action build - $(date)' > /dev/null 2>&1 && \
 echo "pushing" &&\
-git push --force -u origin main:gh-pages > /dev/null 2>&1 && \
-echo "done"
+git push --force -u origin main:gh-pages
 
 rm -rf .git
 cd ..
